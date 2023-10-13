@@ -8,7 +8,17 @@ import java.util.List;
 
 @Entity
 @Table(name ="ORDERS")
-public class Order {
+public class Order extends BaseEntity {
+
+    public Order(){
+
+    }
+
+    public Order(Member member, Delivery delivery, OrderStatus status) {
+        this.member = member;
+        this.delivery = delivery;
+        this.status = status;
+    }
 
     @Id @GeneratedValue
     @Column(name = "ORDER_ID")
@@ -23,6 +33,9 @@ public class Order {
 
     private LocalDateTime orderDate;
 
+    @OneToOne
+    @JoinColumn(name="DELIVERY_ID")
+    private Delivery delivery;
 
     //ENUM TYPE은 꼭 설정해줘야함!!!
     @Enumerated(EnumType.STRING)
@@ -63,5 +76,26 @@ public class Order {
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
         orderItem.setOrder(this);
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
+    private void changeDelivery(Delivery delivery){
+        this.delivery = delivery;
+        delivery.setOrder(this);
     }
 }

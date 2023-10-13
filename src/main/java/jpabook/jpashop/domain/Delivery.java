@@ -1,28 +1,27 @@
 package jpabook.jpashop.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class Member extends BaseEntity{
+public class Delivery extends BaseEntity {
 
-    public Member(){
+    public Delivery(){
 
     }
 
-    public Member(String name, String city, String street, String zipcode) {
-        this.name = name;
+    public Delivery(String city, String street, String zipcode, DeliveryStatus status) {
         this.city = city;
         this.street = street;
         this.zipcode = zipcode;
+        this.status = status;
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="MEMBER_ID")
+    @Id @GeneratedValue
+    @Column(name ="DELIVERY_ID")
     private Long id;
 
-    private String name;
+    @OneToOne(mappedBy = "delivery")
+    private Order order;
 
     private String city;
 
@@ -30,8 +29,8 @@ public class Member extends BaseEntity{
 
     private String zipcode;
 
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
 
     public Long getId() {
         return id;
@@ -41,12 +40,12 @@ public class Member extends BaseEntity{
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public String getCity() {
@@ -73,11 +72,15 @@ public class Member extends BaseEntity{
         this.zipcode = zipcode;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public DeliveryStatus getStatus() {
+        return status;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
+    }
+
+    public void changeOrder(Order order){
+        this.order = order;
     }
 }
